@@ -24,17 +24,19 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
     }
 
     public static void main(String[] args) {
-        if (args.length < 4) {
-            System.err.println("USAGE:Executor hostPort znode filename program [args...]");
-            System.exit(2);
-        }
-        String hostPort = args[0];
-        String znode = args[1];
-        String filename = args[2];
-        String exec[] = new String[args.length - 3];
-        System.arraycopy(args, 3, exec, 0, exec.length);
+//        if (args.length < 4) {
+//            System.err.println("USAGE:Executor hostPort znode filename program [args...]");
+//            System.exit(2);
+//        }
+//        String hostPort = args[0];
+//        String znode = args[1];
+//        String filename = args[2];
+//        String exec[] = new String[args.length - 3];
+//        System.arraycopy(args, 3, exec, 0, exec.length);
         try {
-            new Executor(hostPort, znode, filename, exec).run();
+//            new Executor(hostPort, znode, filename, exec).run();
+            String execAude[] = {"./src/main/java/DemoProgram.java"};
+            new Executor("127.0.0.1:2181", "/zk_test", "./output/output.txt", execAude).run();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,6 +75,11 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
         }
     }
 
+    /**
+     * znode的数据改变
+     *
+     * @param data
+     */
     public void exists(byte[] data) {
         if (data == null) {
             if (child != null) {
@@ -106,7 +113,8 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
             }
             try {
                 System.out.println("Starting child");
-                child = Runtime.getRuntime().exec(exec);
+//                child = Runtime.getRuntime().exec(exec);
+                System.out.println(exec[0]);
                 new StreamWriter(child.getInputStream(), System.out);
                 new StreamWriter(child.getErrorStream(), System.err);
             } catch (Exception e) {
